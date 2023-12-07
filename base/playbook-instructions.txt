@@ -1,8 +1,8 @@
-#Run the command as only the ansadmin
+#To login without  password run the ssh and ansible as "ansadmin"
 
 
 # run this as Root to copy the .kube/config
 sudo su
 cp -r $HOME/.kube /home/ansadmin
 
-chown ansadmin:ansadmin /home/ansadmin/config
+chown ansadmin:ansadmin /home/ansadmin/.kube/config
