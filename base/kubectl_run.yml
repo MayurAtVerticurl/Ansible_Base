@@ -1,0 +1,7 @@
+---
+- name: Run kubectl command
+  hosts: kmaster
+
+  tasks:
+    - name: Run kubectl command
+      command: kubectl run nginxt --image=nginx

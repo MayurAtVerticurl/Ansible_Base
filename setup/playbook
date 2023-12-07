@@ -1,0 +1,5 @@
+sudo su
+
+cp -r $HOME/.kube /home/ansadmin
+
+chown ansadmin:ansadmin /home/ansadmin/config
