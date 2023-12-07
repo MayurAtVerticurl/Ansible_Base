@@ -1,0 +1,8 @@
+#Run the command as only the ansadmin
+
+
+# run this as Root to copy the .kube/config
+sudo su
+cp -r $HOME/.kube /home/ansadmin
+
+chown ansadmin:ansadmin /home/ansadmin/config
