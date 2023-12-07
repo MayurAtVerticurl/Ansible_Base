@@ -1,0 +1,49 @@
+---
+- hosts: kmaster
+  become: true # Add this line to run tasks with elevated privileges
+
+  vars_prompt:
+    - name: reset_confirmation
+      prompt: "This will reset the Kubernetes cluster and delete all data. Do you want to proceed? [y/N]"
+      private: no
+
+  tasks:
+    - name: Reset kubeadm if confirmed
+      when: reset_confirmation | lower == 'y'
+      command: kubeadm reset -f
+      ignore_errors: true
+
+    - name: Run kubeadm init
+      when: reset_confirmation | lower == 'y'
+      command: kubeadm init
+      register: init_result
+
+    - name: Fail if kubeadm init fails
+      fail:
+        msg: "Kubeadm init failed!"
+      when: init_result.rc != 0
+
+    - name: Get kubeadm join command
+      when: init_result.rc == 0
+      command: kubeadm token create --print-join-command
+      register: join_command
+      args:
+        warn: false
+      environment:
+        KUBE_DEBUG: "true"
+      ignore_errors: true
+
+    - name: Display debug information and store kubeadm join command
+      when: init_result.rc == 0
+      block:
+        - debug:
+            var: join_command
+          when: "'timed out' in join_command.stderr"
+
+        - set_fact:
+            kubeadm_join_command: "{{ join_command.stdout_lines[0] }}"
+
+    - name: Display kubeadm join command
+      when: init_result.rc == 0
+      debug:
+        msg: "Kubeadm Join Command: {{ kubeadm_join_command }}"

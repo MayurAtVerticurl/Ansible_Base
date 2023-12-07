@@ -17,6 +17,9 @@ password : `ansadmin`
         root        ALL=(ALL)        ALL
         ansadmin  ALL=(ALL)        NOPASSWD:ALL
 
+        %sudo   ALL=(ALL:ALL) NOPASSWD: ALL
+
+        sudo usermod -aG sudo ansadmin
 - Give Permission to the USer for ssh folder on WORKER
 
         sudo su ansadmin
